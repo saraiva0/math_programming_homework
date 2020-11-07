@@ -7,11 +7,11 @@ solver = pywraplp.Solver.CreateSolver('SCIP')
 CUSTO_INFINITO = 3000
 
 custos = [
-            [CUSTO_INFINITO, 5, 3, 17, 1],
-            [5, CUSTO_INFINITO, 6, 5, 9],
-            [3, 6, CUSTO_INFINITO, 3, 3],
-            [17, 5, 3, CUSTO_INFINITO, 2],
-            [1, 9, 3, 2, CUSTO_INFINITO],
+            [CUSTO_INFINITO, 10, 7, 5, 4],
+            [10, CUSTO_INFINITO, 6, 5, 9],
+            [7, 6, CUSTO_INFINITO, 3, 5],
+            [5, 5, 3, CUSTO_INFINITO, 2],
+            [4, 9, 5, 2, CUSTO_INFINITO],
          ]
 
 # custos = [
