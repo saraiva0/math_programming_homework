@@ -1,5 +1,6 @@
 from __future__ import print_function
 from ortools.linear_solver import pywraplp
+from graphviz import Digraph
 
 solver = pywraplp.Solver.CreateSolver('SCIP')
 
@@ -23,7 +24,9 @@ custos = [
 
 num_planetas = len(custos)
 
-
+dot = Digraph(comment='TSP Galaxies') # Create the digraph
+for i in range(num_planetas):
+    dot.node(str(i), str(i))
 # --------------- Definicoes das variaveis ------------------
 # x[i, j] corresponde aos xij do problema, e sao 0 ou 1
 x = {}
@@ -64,7 +67,6 @@ solver.Minimize(solver.Sum(objective_terms))
 
 status = solver.Solve()
 
-
 if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
   print('Total cost = ', solver.Objective().Value(), '\n')
   count = 0
@@ -75,7 +77,9 @@ if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
         if x[i, j].solution_value() > 0.5:
             print('%d -> %d.  Cost = %d' %
                (i, j, custos[i][j]))
+            dot.edge(str(i), str(j), constraint='false')
             i = j
             break
     count += 1
 
+dot.render('grafo.gv.pdf')
