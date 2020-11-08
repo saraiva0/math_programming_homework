@@ -7,25 +7,17 @@ solver = pywraplp.Solver.CreateSolver('SCIP')
 CUSTO_INFINITO = 3000
 
 custos = [
-            [CUSTO_INFINITO, 10, 7, 5, 4],
-            [10, CUSTO_INFINITO, 6, 5, 9],
-            [7, 6, CUSTO_INFINITO, 3, 5],
-            [5, 5, 3, CUSTO_INFINITO, 2],
-            [4, 9, 5, 2, CUSTO_INFINITO],
-         ]
-
-# custos = [
-#             [CUSTO_INFINITO, 500, 300, 170, 1],
-#             [5, CUSTO_INFINITO, 60, 50, 90],
-#             [300, 6, CUSTO_INFINITO, 30, 30],
-#             [1700, 500, 3, CUSTO_INFINITO, 200],
-#             [1000, 900, 300, 2, CUSTO_INFINITO],
-#          ]
+            [CUSTO_INFINITO, 10, 5, 85, 23],
+            [10, CUSTO_INFINITO, 45, 71, 99],
+            [5, 45, CUSTO_INFINITO, 5, 21],
+            [85, 71, 5, CUSTO_INFINITO, 9],
+            [23, 99, 21, 9, CUSTO_INFINITO],
+        ]
 
 num_planetas = len(custos)
 
 dot = Digraph(comment='TSP Galaxies') # Cria o grafo direcionado
-dot.format = 'svg' # Muda o formato do arquivo de saida
+dot.format = 'jpg' # Muda o formato do arquivo de saida
 
 for i in range(num_planetas): # Adiciona os nohs ao grafo
     dot.node(str(i), str(i))
@@ -44,12 +36,13 @@ for i in range(num_planetas):
 # --------------- End Definicoes das variaveis --------------
 
 
+
 # ------------------------  Restricoes ----------------------
 # Garante que cada vertice so pode ser visitado uma unica vez
 for i in range(num_planetas):
     solver.Add(solver.Sum([x[i, j] for j in range(num_planetas)]) == 1)
 
-# Garante que, ao sair de uma galaxia, tenha-se somente uma outra galaxia como destin
+# Garante que, ao sair de uma galaxia, tenha-se somente uma outra galaxia como destino
 for j in range(num_planetas):
     solver.Add(solver.Sum([x[i, j] for i in range(num_planetas)]) == 1)
 
@@ -72,18 +65,18 @@ solver.Minimize(solver.Sum(objective_terms))
 status = solver.Solve()
 
 if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
-  print('Total cost = ', solver.Objective().Value(), '\n')
+  print('Total cost = ', round(solver.Objective().Value(), 1), '\n')
   count = 0
   i = 0
   while (count < 5):
     for j in range(num_planetas):
         # Test if x[i,j] is 1 (with tolerance for floating point arithmetic).
-        if x[i, j].solution_value() > 0.5:
+        if x[i, j].solution_value() == 1.0:
             print('%d -> %d.  Cost = %d' %
                (i, j, custos[i][j]))
-            dot.edge(str(i), str(j), constraint='false') # Adiciona as arestas no grafo
+            dot.edge(str(i), str(j), constraint='false', label=str(custos[i][j])) # Adiciona as arestas no grafo
             i = j
             break
     count += 1
 
-dot.render('grafo') # Save o arquivo no formato SVG
+dot.render('grafo') # Salva o arquivo no formato SVG
