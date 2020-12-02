@@ -1,11 +1,15 @@
 from __future__ import print_function
 from ortools.linear_solver import pywraplp
 from graphviz import Digraph
+import math as m
 
 def calcula_distancias(cidade, cidades):
   distancias = []
   for i in range(0, len(cidades)):
-    dist = (((float(cidades[i][1]) - float(cidade[0])) ** 2) + (((float(cidades[i][2]) - float(cidade[1])) ** 2))) ** 1/2
+    a = float(cidades[i][1]) - float(cidade[0])
+    b = float(cidades[i][2]) - float(cidade[1])
+    dist = m.sqrt((m.pow(a, 2) + m.pow(b, 2)))
+    #print(f'A distância entre os pontos {cidade[0]}, {cidade[1]} e {cidades[i][1]}, {cidades[i][2]} é: {dist}')
     if dist == 0:
       dist = 10000000000
     distancias.append(dist)
